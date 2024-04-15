@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Countdown</title>
+    <script>
+        // Function to display the countdown notification
+        function displayCountdownNotification() {
+            // Show countdown notification for 3 seconds
+            document.getElementById('countdown').innerText = 'Starting in 3 seconds...';
+            setTimeout(function() {
+                document.getElementById('countdown').innerText = 'Starting in 2 seconds...';
+            }, 1000);
+            setTimeout(function() {
+                document.getElementById('countdown').innerText = 'Starting in 1 second...';
+            }, 2000);
+            // Start the Python program after 3 seconds
+            setTimeout(function() {
+                // Redirect to start_game route to start the Python program
+                window.location.href = '/start_game';
+            }, 3000);
+        }
+        
+        // Call the function to display the countdown notification when the page loads or refreshes
+        window.onload = displayCountdownNotification;
+
+    </script>
+</head>
+<body>
+    <h1>Game Countdown</h1>
+    <p id="countdown"></p>
+</body>
+</html>

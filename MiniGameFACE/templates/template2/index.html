@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Feed with Face Emotion and Pose Detection</title>
+    <style>
+        #video-container {
+            position: relative;
+            width: 640px; /* Adjust width as needed */
+            height: 480px; /* Adjust height as needed */
+            margin: 0 auto; /* Center the video container */
+        }
+
+        #video {
+            width: 100%;
+            height: 100%;
+        }
+
+        #overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-size: 18px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <video id="video" autoplay playsinline></video>
+        <div id="overlay"></div>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const overlay = document.getElementById('overlay');
+        
+        // Function to start webcam feed and perform detection
+        async function startVideo() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+
+                // Start fetching frames from the Flask server
+                const url = '/video_feed';
+                const response = await fetch(url);
+                const reader = response.body.getReader();
+
+                // Read the video stream as it arrives and display it in the <video> element
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) {
+                        break;
+                    }
+                    const blob = new Blob([value]);
+                    const imageUrl = URL.createObjectURL(blob);
+                    video.src = imageUrl;
+                }
+                
+            } catch (error) {
+                console.error('Error accessing webcam:', error);
+            }
+        }
+
+        startVideo();
+    </script>
+</body>
+</html>
