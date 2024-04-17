@@ -7,7 +7,7 @@ import keyboard
 from pydub import AudioSegment
 import subprocess
 import os
-#------------------------
+#-----------------------
 import speech_recognition as sr
 
 import google.generativeai as genai
@@ -109,7 +109,7 @@ def convert_mp3_to_ogg(input_path, output_path):
 def save_latest_recording(frames):
     global playAudio
     
-    playAudio = True
+    playAudio = False
 
     if frames:
         sound_file = wave.open("input_recording.wav", "wb")
@@ -128,22 +128,24 @@ def save_latest_recording(frames):
                 text = r.recognize_google(audio_data)
                 print("Recognized speech:", text)
 
-                #print("You are a Kind Singaporean Caretaker which uses slang and full of personality, Please Response to this message:" + text)
+                print("You are a Kind Singaporean Caretaker which uses slang and full of personality, Please Response to this message:" + text)
 
-                #convo = model.start_chat(history=[])
-                #convo.send_message("You are a Kind Singaporean Caretaker which uses slang and full of personality, Please Response to this message:" + text)
+                convo = model.start_chat(history=[])
+                convo.send_message("You are a Kind Singaporean Caretaker which uses slang and full of personality, Please Response to this message:" + text)
 
-                #print("Response from model:", convo.last.text)
+                print("Response from model:", convo.last.text)
 
-                #outputaudio = client.generate(
-                #    text= "Of course lah! You all triple E students are truly champions, lah! With your mirror care project, you'll be spreading good vibes and making a real difference for the elderly, no doubt about it!",
-                #    voice= "Lily",
-                #)
-                #save(outputaudio, "./public/audios/output_speech.mp3")
+                outputaudio = client.generate(
+                    text= convo.last.text,
+                    voice= "Lily",
+                )
+                save(outputaudio, "./public/audios/output_speech.mp3")
 
-                #convert_mp3_to_ogg(mp3_input_path, ogg_output_path)
+                convert_mp3_to_ogg(mp3_input_path, ogg_output_path)
 
-                #run_rhubarb(input_audio_file, output_json_file)
+                run_rhubarb(input_audio_file, output_json_file)
+                
+                playAudio = True
 
                   # Set playAudio to True when a new output file is generated
             except sr.UnknownValueError:

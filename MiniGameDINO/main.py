@@ -4,40 +4,29 @@ import random
 pygame.init()
 
 # Global Constants
-screen_info = pygame.display.Info()
-#screen_width = screen_info.current_w
-#screen_height = screen_info.current_h
-# Set the position to the top-left corner
-
-# Global Constants
-SCREEN_HEIGHT = screen_info.current_h - 500
-SCREEN_WIDTH = screen_info.current_w - 500
-#SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-x = 0
-y = 0
-os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x, y)
+SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Pygame Window")
 
-RUNNING = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
-           pygame.image.load(os.path.join("Assets/Dino", "DinoRun2.png"))]
-JUMPING = pygame.image.load(os.path.join("Assets/Dino", "DinoJump.png"))
-DUCKING = [pygame.image.load(os.path.join("Assets/Dino", "DinoDuck1.png")),
-           pygame.image.load(os.path.join("Assets/Dino", "DinoDuck2.png"))]
+RUNNING = [pygame.image.load(os.path.join(".\Assets\Dino", "DinoRun1.png")),
+           pygame.image.load(os.path.join(".\Assets\Dino", "DinoRun2.png"))]
+JUMPING = pygame.image.load(os.path.join(".\Assets\Dino", "DinoJump.png"))
+DUCKING = [pygame.image.load(os.path.join(".\Assets\Dino", "DinoDuck1.png")),
+           pygame.image.load(os.path.join(".\Assets\Dino", "DinoDuck2.png"))]
 
-SMALL_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus1.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus2.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus3.png"))]
-LARGE_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus1.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus2.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus3.png"))]
+SMALL_CACTUS = [pygame.image.load(os.path.join(".\Assets\Cactus", "SmallCactus1.png")),
+                pygame.image.load(os.path.join(".\Assets\Cactus", "SmallCactus2.png")),
+                pygame.image.load(os.path.join(".\Assets\Cactus", "SmallCactus3.png"))]
+LARGE_CACTUS = [pygame.image.load(os.path.join(".\Assets\Cactus", "LargeCactus1.png")),
+                pygame.image.load(os.path.join(".\Assets\Cactus", "LargeCactus2.png")),
+                pygame.image.load(os.path.join(".\Assets\Cactus", "LargeCactus3.png"))]
 
-BIRD = [pygame.image.load(os.path.join("Assets/Bird", "Bird1.png")),
-        pygame.image.load(os.path.join("Assets/Bird", "Bird2.png"))]
+BIRD = [pygame.image.load(os.path.join(".\Assets\Bird", "Bird1.png")),
+        pygame.image.load(os.path.join(".\Assets\Bird", "Bird2.png"))]
 
-CLOUD = pygame.image.load(os.path.join("Assets/Other", "Cloud.png"))
+CLOUD = pygame.image.load(os.path.join(".\Assets\Other", "Cloud.png"))
 
-BG = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
+BG = pygame.image.load(os.path.join(".\Assets\Other", "Track.png"))
 
 
 class Dinosaur:
@@ -63,14 +52,6 @@ class Dinosaur:
         self.dino_rect.y = self.Y_POS
 
     def update(self, userInput):
-
-
-        # Open the file in read mode
-        with open('userinput.txt', 'r') as file:
-            # Read and print the content of the file
-            actual_input = file.read().strip()
-            print(actual_input)
-
         if self.dino_duck:
             self.duck()
         if self.dino_run:
@@ -81,15 +62,15 @@ class Dinosaur:
         if self.step_index >= 10:
             self.step_index = 0
 
-        if actual_input == '1' and not self.dino_jump:
+        if userInput[pygame.K_w] and not self.dino_jump:
             self.dino_duck = False
             self.dino_run = False
             self.dino_jump = True
-        elif actual_input == '2' and not self.dino_jump:
+        elif userInput[pygame.K_s] and not self.dino_jump:
             self.dino_duck = True
             self.dino_run = False
             self.dino_jump = False
-        elif not (self.dino_jump or actual_input == '2'):
+        elif not (self.dino_jump or userInput[pygame.K_s]):
             self.dino_duck = False
             self.dino_run = True
             self.dino_jump = False
@@ -199,6 +180,8 @@ def main():
     def score():
         global points, game_speed
         points += 1
+        if points % 100 == 0:
+            game_speed += 1
 
         text = font.render("Points: " + str(points), True, (0, 0, 0))
         textRect = text.get_rect()
@@ -216,7 +199,6 @@ def main():
         x_pos_bg -= game_speed
 
     while run:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -258,23 +240,13 @@ def menu(death_count):
     global points
     run = True
     while run:
-
-
-        # Open the file in read mode
-        with open('userinput.txt', 'r') as file:
-            # Read and print the content of the file
-            actual_input = file.read().strip()
-            print(actual_input)
-
-
-
         SCREEN.fill((255, 255, 255))
         font = pygame.font.Font('freesansbold.ttf', 30)
 
         if death_count == 0:
-            text = font.render("Show your Rock & Roll to the camera to start", True, (0, 0, 0))
+            text = font.render("Show your fist to the camera to start", True, (0, 0, 0))
         elif death_count > 0:
-            text = font.render("Show your Rock & Roll to the camera to restart", True, (0, 0, 0))
+            text = font.render("Show your fist to the camera to restart", True, (0, 0, 0))
             score = font.render("Your Score: " + str(points), True, (0, 0, 0))
             scoreRect = score.get_rect()
             scoreRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
@@ -284,10 +256,12 @@ def menu(death_count):
         SCREEN.blit(text, textRect)
         SCREEN.blit(RUNNING[0], (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 140))
         pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                run = False
+            if event.type == pygame.KEYDOWN:
+                main()
 
-        if actual_input == '-1':
-            main()
-
-print("END")
 
 menu(death_count=0)

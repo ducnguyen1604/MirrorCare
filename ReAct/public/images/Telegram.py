@@ -5,6 +5,18 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 import secrets
 import string
 
+import serial
+import time
+
+
+SerialObj = serial.Serial('COM10') # COMxx  format on Windows
+                  # ttyUSBx format on Linux
+SerialObj.baudrate = 9600  # set Baud rate to 9600
+SerialObj.bytesize = 8   # Number of data bits = 8
+SerialObj.parity  ='N'   # No parity
+SerialObj.stopbits = 1   # Number of Stop bits = 1
+
+
 def generate_password(length=6):
     characters = string.ascii_letters + string.digits
     password = ''.join(secrets.choice(characters) for _ in range(length))
@@ -56,6 +68,17 @@ async def videocall_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def analysis_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Generating Analysis...')
+    await update.message.reply_text('https://docs.google.com/spreadsheets/d/1yOmEXi-7S6PydeWj9mPBoQfhNda4Q8BtkMxB_40WkLs/edit#gid=0')
+    
+async def sorter_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text('Loading...')
+    time.sleep(1)
+    SerialObj.write(b'A')    #transmit 'A' (8bit) to micro/Arduino
+
+async def dispense_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text('Dispensing...')
+    time.sleep(1)
+    SerialObj.write(b'B')    #transmit 'B' (8bit) to micro/Arduino
 
 def save_message_to_file(chat_id: int, line_number: int, text: str):
     # Read existing content from the file
@@ -131,6 +154,9 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler('reminder2', reminder2_command))
     app.add_handler(CommandHandler('videocall', videocall_command))
     app.add_handler(CommandHandler('analysis', analysis_command))
+    app.add_handler(CommandHandler('sorting', sorter_command))
+    app.add_handler(CommandHandler('dispensing', dispense_command))
+    
 
     # Messages
     app.add_handler(CallbackQueryHandler(button_click))

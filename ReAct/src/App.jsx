@@ -189,28 +189,28 @@ function App() {
           </p>
 
         </div>
-        <p style={{ fontSize: '10px', color: 'white', margin: '-2px 0px -5px 0', whiteSpace: 'pre-line' }}>
+        <p style={{ fontSize: '1em', color: 'white', margin: '-2px 0px -5px 0', whiteSpace: 'pre-line' }}>
           {messageOfTheDay}
         </p>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', height: '87vh' /* Adjust the height as needed */ }}>
+      <div style={{ display: 'flex', alignItems: 'center', height: '80vh' /* Adjust the height as needed */ }}>
         <video ref={videoRef} autoPlay playsInline style={{ maxWidth: '100%', maxHeight: '100%', width: '100%', height: '100%', borderRadius: '10px', border: '4px solid lightgreen', objectFit: 'cover'}} />
       </div>
 
       <div style={{ textAlign: 'center', marginTop: '20px', borderRadius: '10px', maxWidth: '100%' }}>
-        <table style={{ borderCollapse: 'collapse', width: '100%', margin: 'auto', marginTop: '-10px', backgroundColor: 'black', borderRadius: '10px' }}>
+        <table style={{ borderCollapse: 'collapse', width: '100%', height:'10vh', margin: 'auto', marginTop: '-10px', backgroundColor: 'black', borderRadius: '10px' }}>
           <thead>
             <tr>
-              <th style={{ color: 'white' }}>Reminder 1:</th>
-              <th style={{ color: 'white' }}>{reminderData.data1}</th>
+              <th style={{ color: 'white', fontSize: '2em', padding: '20px' }}>Reminder 1:</th>
+              <th style={{ color: 'white' , fontSize: '2em',  paddingTop: '20px' }}>{reminderData.data1}</th>
               {/* Add more columns as needed */}
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th style={{ color: 'white' }}>Reminder 2:</th>
-              <th style={{ color: 'white' }}>{reminderData.data2}</th>
+              <th style={{ color: 'white', fontSize: '2em', paddingTop: '20px' }}>Reminder 2:</th>
+              <th style={{ color: 'white' , fontSize: '2em',  paddingTop: '20px' }}>{reminderData.data2}</th>
               {/* Add more data rows as needed */}
             </tr>
           </tbody>

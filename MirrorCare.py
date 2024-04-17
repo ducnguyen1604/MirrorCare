@@ -3,6 +3,29 @@ import subprocess
 import time
 import os
 
+
+import pygame
+import time
+
+def init_audio():
+    # Initialize pygame mixer
+    pygame.mixer.init()
+
+def play_audio(file_path, volume=0.7):
+    # Load the sound file
+    pygame.mixer.music.load(file_path)
+    
+    # Set the volume
+    pygame.mixer.music.set_volume(volume)
+    
+    # Play the sound
+    pygame.mixer.music.play()
+    
+def stop_audio():
+    # Stop the music
+    pygame.mixer.music.stop()
+    
+
 # Launch Terminal 1 h
 # Change to the Avatar directory
 avatar_directory = r'.\Avatar'
@@ -18,7 +41,7 @@ subprocess.Popen(['start', 'cmd', '/k', 'python', 'Telegram.py'], shell=True, cw
 react_directory = r'.\ReAct'
 subprocess.run(['start', 'cmd', '/k', 'npm', 'run', 'dev'], shell=True, cwd=react_directory)
 
-# Launch Terminal 4
+# Launch Terminal 4t
 # Change to the Avatar directory
 avatar_directory = r'.\Avatar'
 subprocess.run(['start', 'cmd', '/k', 'yarn', 'dev'], shell=True, cwd=avatar_directory)
@@ -44,7 +67,7 @@ import keyboard
 driver = webdriver.Chrome()
 
 # List of webpages to toggle between
-webpages = ["http://localhost:5174/", "http://localhost:5173/", "https://monumental-snickerdoodle-9c90a1.netlify.app/", "https://glistening-scone-1a8f3e.netlify.app/"]
+webpages = ["http://localhost:5174/", "http://localhost:5173/", "https://monumental-snickerdoodle-9c90a1.netlify.app/", "https://resplendent-dasik-7e9ed8.netlify.app/", "https://glistening-scone-1a8f3e.netlify.app/"]
 current_page_index = 0
 
 import pyautogui
@@ -65,16 +88,29 @@ def toggle_webpage():
     global flag
     current_page_index = (current_page_index + 1) % len(webpages)
     print(flag)
+    
+    
 
-
+    if webpages[current_page_index] == "http://localhost:5174/":
+        init_audio()
+        play_audio(".\Chill1.mp3")
 
     if webpages[current_page_index] == "https://glistening-scone-1a8f3e.netlify.app/":
         flag = True
         dino_directory = r'.\MiniGameDINO'
         subprocess.Popen(['start', 'cmd', '/c', 'python', 'script.py'], shell=True, cwd=dino_directory)
+        init_audio()
+        play_audio(".\kahoot.mp3")
+        
+        
+    if webpages[current_page_index] == "https://resplendent-dasik-7e9ed8.netlify.app/":
+        face_directory = r'.\MiniGameFACE\facial'
+        subprocess.Popen(['start', 'cmd', '/c', 'python', 'flaskemotiongoogle.py'], shell=True, cwd=face_directory)
+        init_audio()
+        play_audio(".\happy.mp3")
     
     if (webpages[current_page_index] != "https://glistening-scone-1a8f3e.netlify.app/") and (flag == True):
-        
+        stop_audio()
         closeprogram()
         flag = False
     

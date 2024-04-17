@@ -1,2 +1,2 @@
-Reminder: test 1
+Reminder: Remember to take pill
 Reminder: Take 3x Pill B [3PM]

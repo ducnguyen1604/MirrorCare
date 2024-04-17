@@ -1,67 +1,3 @@
-from Google import Create_Service
-
-CLIENT_SECRET_FILE = 'client_secret_mirrorcare.json'
-API_NAME = 'sheets'
-API_VERSION = 'v4'
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-
-spreadsheet_id = '1yOmEXi-7S6PydeWj9mPBoQfhNda4Q8BtkMxB_40WkLs'
-worksheet_name = 'Data!'
-
-def update_google_sheet(mydata, spreadsheet_id, worksheet_name):
-    service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
-
-    # Function: Obtain Values from A1 cell
-    response = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheet_id,
-        majorDimension='ROWS',
-        range='Data!A1:A1'
-    ).execute()
-
-    value = response.get('values')[0][0] if 'values' in response and response.get('values') else None
-
-    # Function: Insert all of the current data into the google sheet
-    cell_range_insert = 'B' + str(value)
-
-    # Prepare values for insertion
-    values = []
-    for data in mydata:
-        row_values = [
-            data.get('highScore', ''),
-            data.get('dominant_emotion', ''),
-            data.get('current_date', ''),
-            data.get('current_time', '')
-        ]
-        values.append(row_values)
-
-    # Define value range body
-    value_range_body = {
-        'majorDimension': 'ROWS',
-        'values': values
-    }
-
-    # Update the Google Sheet
-    service.spreadsheets().values().update(
-        spreadsheetId=spreadsheet_id,
-        valueInputOption='USER_ENTERED',
-        range=worksheet_name + cell_range_insert,
-        body=value_range_body
-    ).execute()
-
-    # Function: Update the Values from A1 Cell
-    final_value = int(value) + len(mydata)
-
-    service.spreadsheets().values().update(
-        spreadsheetId=spreadsheet_id,
-        valueInputOption='USER_ENTERED',
-        range='Data!A1',
-        body={'values': [[final_value]]}
-    ).execute()
-
-#--------------------------------------
-
-
-
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -71,7 +7,7 @@ from flask import Flask, render_template, Response, jsonify
 import webbrowser
 import threading
 from datetime import datetime
-#
+
 app = Flask(__name__)
 faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 mp_drawing = mp.solutions.drawing_utils
@@ -200,10 +136,9 @@ def start_camera():
                 if angle < 30 and angle2 < 30 and stage == 'down':
                     stage = "up"
                     counter += 1
-                if highScore < counter:
-                    highScore = counter
-                    with open('highscore_data.txt', 'w') as f:
-                        f.write(str(highScore))
+                print(counter)
+                with open('highscore_data.txt', 'w') as f:
+                        f.write(str(counter))
 
             except:
                 pass
@@ -226,17 +161,6 @@ def start_camera():
             cv2.putText(image, stage,
                         (100,60),
                         cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
-
-            #Highscore data
-            cv2.putText(image, 'Highscore', (470,12),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
-            cv2.putText(image, str(highScore),
-                        (475,60),
-                        cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
-            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                    mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2),
-                                    mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2)
-                                        )
     
             # Render detections
             mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
@@ -264,19 +188,13 @@ def start_camera():
                     # If predictions is a dictionary, directly access the dominant emotion
                     dominant_emotion = predictions['dominant_emotion']
                 
-                # timestamp = datetime.now().strftime('%H:%M:%S %Y-%m-%d')
-                current_time = datetime.now().strftime('%I:%M:%S %p')
-                current_date = datetime.now().strftime('%m/%d/%Y')
+                timestamp = datetime.now().strftime('%H:%M:%S %Y-%m-%d')
 
                 #append current game data to the list
-                print(type(highScore), highScore)
-                print(type(dominant_emotion), dominant_emotion)
-                print(type(current_date), current_date)
-                print(type(current_time), current_time)
-                
-                game_data.append({'highScore' : highScore, 'dominant_emotion' : dominant_emotion, 'current_date' : current_date, 'current_time' : current_time})
+                game_data.append({'timestamp': timestamp,'emotion': dominant_emotion,'highscore': counter})
+                print("Game Data:")
                 print(game_data)
-                
+                                
                 # Draw rectangle around the face
                 cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
         
@@ -288,16 +206,14 @@ def start_camera():
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-        
-        update_google_sheet(game_data, spreadsheet_id, worksheet_name)
 
     cap.release()
     cv2.destroyAllWindows()
 
 def open_browser():
-    url = 'http://127.0.0.2:5000/'  # Change the URL to match your Flask application's URL
+    url = 'http://127.0.0.1:5000/'  # Change the URL to match your Flask application's URL
     webbrowser.open(url)
 
 if __name__ == "__main__":
     open_browser()
-    app.run(host='127.0.0.2')
+    app.run()
