@@ -23,8 +23,8 @@ def generate_password(length=6):
     return password
 
 
-TOKEN: Final = '6676651967:AAHntg9dJq1a80Ik5ugyDw64U_JdAxiEURo'
-BOT_USERNAME: Final = '@MirrorCareBot'
+TOKEN: Final = ''
+BOT_USERNAME: Final = ''
 
 # Variable to store the user's next message
 next_message: dict = {}
