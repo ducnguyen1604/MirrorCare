@@ -20,7 +20,7 @@ def run_script(script_name):
 
 if __name__ == "__main__":
     script1_thread = threading.Thread(target=run_script, args=("hand_dino.py",))
-    script2_thread = threading.Thread(target=run_script, args=("main.py",))
+    script2_thread = threading.Thread(target=run_script, args=("dino_game.py",))
     #script3_thread = threading.Thread(target=run_script, args="alt_tab.py")
 
     script1_thread.start()
