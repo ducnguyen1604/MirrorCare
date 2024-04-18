@@ -91,23 +91,23 @@ def toggle_webpage():
     
     
 
-    if webpages[current_page_index] == "http://localhost:5174/":
+    while webpages[current_page_index] == "http://localhost:5174/":
         init_audio()
-        play_audio(".\Chill1.mp3")
+        play_audio(".\sound\Chill1.mp3")
 
     if webpages[current_page_index] == "https://glistening-scone-1a8f3e.netlify.app/":
         flag = True
         dino_directory = r'.\MiniGameDINO'
         subprocess.Popen(['start', 'cmd', '/c', 'python', 'script.py'], shell=True, cwd=dino_directory)
         init_audio()
-        play_audio(".\kahoot.mp3")
+        play_audio(".\sound\kahoot.mp3")
         
         
     if webpages[current_page_index] == "https://resplendent-dasik-7e9ed8.netlify.app/":
         face_directory = r'.\MiniGameFACE\facial'
         subprocess.Popen(['start', 'cmd', '/c', 'python', 'flaskemotiongoogle.py'], shell=True, cwd=face_directory)
         init_audio()
-        play_audio(".\happy.mp3")
+        play_audio(".\sound\happy.mp3")
     
     if (webpages[current_page_index] != "https://glistening-scone-1a8f3e.netlify.app/") and (flag == True):
         stop_audio()
