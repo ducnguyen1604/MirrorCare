@@ -11,7 +11,7 @@ def init_audio():
     # Initialize pygame mixer
     pygame.mixer.init()
 
-def play_audio(file_path, volume=0.7):
+def play_audio(file_path, volume=0.4):
     # Load the sound file
     pygame.mixer.music.load(file_path)
     

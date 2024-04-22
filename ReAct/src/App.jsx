@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 
-const API_KEY = '';
+const API_KEY = 'a634638c76784cd4ff382858dd608d7f';
 
 function App() {
   const videoRef = useRef(null);

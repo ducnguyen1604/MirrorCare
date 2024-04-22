@@ -11,7 +11,7 @@ import os
 import speech_recognition as sr
 
 import google.generativeai as genai
-genai.configure(api_key="")
+genai.configure(api_key="AIzaSyAIwi8Tn3vcl8L_SluRolAlqYsvHC7BvPI")
 
 # Set up the model
 generation_config = {
@@ -128,10 +128,10 @@ def save_latest_recording(frames):
                 text = r.recognize_google(audio_data)
                 print("Recognized speech:", text)
 
-                print("You are a Kind Singaporean Caretaker which uses slang and full of personality, Please Response to this message:" + text)
+                print("You are a Kind Singaporean Caretaker and full of personality, Please Response to this message in less than 60 words:" + text)
 
                 convo = model.start_chat(history=[])
-                convo.send_message("You are a Kind Singaporean Caretaker which uses slang and full of personality, Please Response to this message:" + text)
+                convo.send_message("You are a Kind Singaporean Caretaker and full of personality, Please Response to this message in less than 60 words:" + text)
 
                 print("Response from model:", convo.last.text)
 
@@ -144,6 +144,8 @@ def save_latest_recording(frames):
                 convert_mp3_to_ogg(mp3_input_path, ogg_output_path)
 
                 run_rhubarb(input_audio_file, output_json_file)
+                
+                playAudio = True
                 
                 playAudio = True
 

@@ -7,14 +7,17 @@ import string
 
 import serial
 import time
+import pygame
+import os
 
 
-SerialObj = serial.Serial('COM10') # COMxx  format on Windows
+SerialObj = serial.Serial('COM7') # COMxx  format on Windows
                   # ttyUSBx format on Linux
 SerialObj.baudrate = 9600  # set Baud rate to 9600
 SerialObj.bytesize = 8   # Number of data bits = 8
 SerialObj.parity  ='N'   # No parity
 SerialObj.stopbits = 1   # Number of Stop bits = 1
+
 
 
 def generate_password(length=6):
@@ -23,11 +26,25 @@ def generate_password(length=6):
     return password
 
 
-TOKEN: Final = ''
-BOT_USERNAME: Final = ''
+TOKEN: Final = '6676651967:AAHntg9dJq1a80Ik5ugyDw64U_JdAxiEURo'
+BOT_USERNAME: Final = '@MirrorCareBot'
 
 # Variable to store the user's next message
 next_message: dict = {}
+
+def play_mp3(filename):
+    # Initialize pygame
+    pygame.mixer.init()
+
+        # Load the mp3 file
+    pygame.mixer.music.load(filename)
+
+        # Play the mp3 file
+    pygame.mixer.music.play()
+
+        # Wait until music has finished playing
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
@@ -49,7 +66,6 @@ async def reminder1_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Save the chat ID and set a flag to capture the next message
     chat_id = update.message.chat.id
     next_message[chat_id] = True
-
 async def reminder2_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Please type your second reminder message.')
 
@@ -60,11 +76,31 @@ async def reminder2_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def videocall_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     password = generate_password()
     videocall_link = "https://monumental-snickerdoodle-9c90a1.netlify.app/"
-
     # Send the videocall link as a new message
     await update.message.reply_text(videocall_link)
     save_password_to_file(password)
     await update.message.reply_text(password)
+    
+    # trigger ringtone when videocall is clicked
+    #when care giver press /videocall, the ringtone will be played
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    # Name of the mp3 file to play
+    mp3_file = "ringtone.mp3"
+    
+    # Path to the mp3 file
+    mp3_path = os.path.join(current_dir, mp3_file)
+
+    # Play the mp3 file
+    play_mp3(mp3_path)
+
+    
+
+async def health_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    health_command = 'https://thingspeak.com/channels/2516394'
+    # Send the videocall link as a new message
+    await update.message.reply_text(health_command)
+
 
 async def analysis_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Generating Analysis...')
@@ -156,6 +192,7 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler('analysis', analysis_command))
     app.add_handler(CommandHandler('sorting', sorter_command))
     app.add_handler(CommandHandler('dispensing', dispense_command))
+    app.add_handler(CommandHandler('health', health_command))
     
 
     # Messages

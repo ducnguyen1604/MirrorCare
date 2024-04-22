@@ -61,7 +61,7 @@ while True:
 
             updatetextfile(actionnumber=2)
 
-        elif fingerUp == [0, 1, 0, 0, 1]:
+        elif fingerUp == [1, 1, 0, 0, 1]:
             cv2.putText(frame, 'ROCK n ROLL', (20, 460), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 1, cv2.LINE_AA)
             cv2.putText(frame, 'STARTING', (420, 460), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 1, cv2.LINE_AA)
 
@@ -72,7 +72,7 @@ while True:
 
 
     cv2.imshow("Frame", frame)
-    cv2.moveWindow("Frame", 1000, 550)  # Adjust the coordinates as needed
+    cv2.moveWindow("Frame", 300, 1200)  # Adjust the coordinates as needed
     cv2.setWindowProperty('Frame', cv2.WND_PROP_TOPMOST, 1)
 
     change_tab += 1
